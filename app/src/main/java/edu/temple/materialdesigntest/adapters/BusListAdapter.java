@@ -1,7 +1,8 @@
-package edu.temple.materialdesigntest;
+package edu.temple.materialdesigntest.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,14 @@ import android.widget.Toast;
 import java.util.Collections;
 import java.util.List;
 
+import edu.temple.materialdesigntest.model.Bus;
+import edu.temple.materialdesigntest.R;
+
 /**
  * Created by rafaellima on 10/22/15.
  *
  * This class receives a Context and a List<Bus> to populate recycler view.
+ * This class also handles on click view for a particular bus list cell
  *
  */
 public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHolder> {
@@ -26,27 +31,30 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
     List<Bus> buses = Collections.emptyList();
 
 
-
     public BusListAdapter(Context context, List<Bus> buses){
+
+        Log.d("JSON", "Bus list adapter being called: " + buses.toString());
+
         this.context=context;
         inflater = LayoutInflater.from(context);
         this.buses = buses;
+
     }
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.custom_row,parent,false);
+        View view = inflater.inflate(R.layout.custom_row, parent, false);
 
         MyViewHolder holder = new MyViewHolder(view);
-
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder,final int position) {
+
         Bus currentBus = buses.get(position);
 
         holder.icon.setImageResource(R.drawable.bus_icon_32);
@@ -93,6 +101,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
             busNumber = (TextView) itemView.findViewById(R.id.textViewBusNumber);
             busDirection = (TextView) itemView.findViewById(R.id.textViewBusDirection);
             icon = (ImageView) itemView.findViewById(R.id.listIcon);
+
 
         }
     }

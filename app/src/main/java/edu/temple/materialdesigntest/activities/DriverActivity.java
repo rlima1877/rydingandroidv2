@@ -1,4 +1,4 @@
-package edu.temple.materialdesigntest;
+package edu.temple.materialdesigntest.activities;
 
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import edu.temple.materialdesigntest.R;
 
 public class DriverActivity extends AppCompatActivity {
 

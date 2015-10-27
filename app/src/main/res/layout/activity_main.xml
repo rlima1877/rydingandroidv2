@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.temple.materialdesigntest.MainActivity">
+    tools:context="edu.temple.materialdesigntest.activities.MainActivity">
 
     <include android:id="@+id/app_bar" layout="@layout/app_bar">
 

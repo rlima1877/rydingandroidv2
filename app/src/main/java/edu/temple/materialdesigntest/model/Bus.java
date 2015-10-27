@@ -1,4 +1,4 @@
-package edu.temple.materialdesigntest;
+package edu.temple.materialdesigntest.model;
 
 
 /**
