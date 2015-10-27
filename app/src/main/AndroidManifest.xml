@@ -13,6 +13,12 @@
         android:name=".network.MyApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.AIzaSyB1vwl0KvEODgTrJdG6iHaCRBhZJTvVt08"
+            android:value="AIzaSyB1vwl0KvEODgTrJdG6iHaCRBhZJTvVt08"
+            />
+
         <activity
 
             android:name=".activities.MainActivity"
