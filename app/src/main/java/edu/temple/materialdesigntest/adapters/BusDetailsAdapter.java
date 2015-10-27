@@ -1,7 +1,6 @@
 package edu.temple.materialdesigntest.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,24 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import edu.temple.materialdesigntest.R;
-import edu.temple.materialdesigntest.activities.BusDetails;
 import edu.temple.materialdesigntest.model.Bus;
 
 /**
- * Created by rafaellima on 10/22/15.
- *
- * This class receives a Context and a List<Bus> to populate recycler view.
- * This class also handles on click view for a particular bus list cell
- *
+ * Created by rafaellima on 10/27/15.
  */
-public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHolder> {
+public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
     private Context context;
@@ -34,7 +26,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
     List<Bus> buses = Collections.emptyList();
 
 
-    public BusListAdapter(Context context, List<Bus> buses){
+    public BusDetailsAdapter(Context context, List<Bus> buses){
 
 
         Log.d("JSON", "Context " + context.toString());
@@ -50,7 +42,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.custom_row, parent, false);
+        View view = inflater.inflate(R.layout.custom_detail_row, parent, false);
 
         MyViewHolder holder = new MyViewHolder(view);
 
@@ -64,28 +56,11 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
         holder.icon.setImageResource(R.drawable.bus_icon_32);
         holder.busNumber.setText(Integer.toString(currentBus.getBusNumber()));
-        holder.busDirection.setText(currentBus.getBusRoute());
-
-
-        //Click listener for each cell in the bus list.
-        //This will change once we have ETA information
-        //Pass current bus to next activity.
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BusDetails.class);
-                intent.putParcelableArrayListExtra("bus_list", (ArrayList<Bus>) buses);
-
-                view.getContext().startActivity(intent);
-
-
-                Toast.makeText(context, "Clicked on bus: " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.busETA.setText("Arriving at: " + "[busNearestStop]" + " in " + "[ETA in Mins]");
 
     }
+
+
 
     //In case we want to let user delete an item from the list.
     //Create a button is custom layout with an onclick listener calling this method.
@@ -104,16 +79,17 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
     class MyViewHolder extends RecyclerView.ViewHolder{
 
+
         TextView busNumber;
-        TextView busDirection;
+        TextView busETA;
         ImageView icon;
 
         public MyViewHolder(View itemView) {
 
             super(itemView);
-            busNumber = (TextView) itemView.findViewById(R.id.textViewBusNumber);
-            busDirection = (TextView) itemView.findViewById(R.id.textViewBusDirection);
-            icon = (ImageView) itemView.findViewById(R.id.listIcon);
+            busNumber = (TextView) itemView.findViewById(R.id.textViewDetailsBusNumber);
+            busETA = (TextView) itemView.findViewById(R.id.textViewEAT);
+            icon = (ImageView) itemView.findViewById(R.id.listDetailsIcon);
 
 
         }
@@ -121,4 +97,4 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
 
 
-}//end BusListAdapter
+}//end BusDetailsAdapter

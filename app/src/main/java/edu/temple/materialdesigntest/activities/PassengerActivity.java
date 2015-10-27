@@ -35,7 +35,6 @@ public class PassengerActivity extends AppCompatActivity {
     private BusListAdapter busListAdapter;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    private List<Bus> testList;
 
     public static final String url = "http://templecs.com/bus/getallbuses";
 
@@ -43,13 +42,8 @@ public class PassengerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
-
         setupToolbar();
-
-
         pullData();
-
-
     }
 
     private void setupToolbar(){
@@ -62,7 +56,7 @@ public class PassengerActivity extends AppCompatActivity {
 
     private void initializeViews(List<Bus> list){
         recyclerView = (RecyclerView) findViewById(R.id.busList);
-        busListAdapter = new BusListAdapter(getApplicationContext(), list);
+        busListAdapter = new BusListAdapter(this, list);
         recyclerView.setAdapter(busListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.temple.materialdesigntest.activities.BusDetails">
+
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
+
+
+    <TextView
+        android:layout_below="@+id/app_bar"
+        android:id="@+id/labelDetails"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Estimated Time To Next Stop"
+        android:paddingLeft="10dp"
+        android:textSize="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/labelDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listBusDetails"
+        android:focusableInTouchMode="false">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+
+
+</RelativeLayout>
