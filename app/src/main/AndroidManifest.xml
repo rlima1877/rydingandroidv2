@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-<<<<<<< HEAD
+
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" >
             <meta-data
@@ -22,13 +22,11 @@
                 android:value=".activities.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-=======
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
->>>>>>> b7bf88d4de868cd7cb9e0b4ed552c968253ea033
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
