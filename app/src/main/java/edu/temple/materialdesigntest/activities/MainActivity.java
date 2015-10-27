@@ -1,4 +1,4 @@
-package edu.temple.materialdesigntest;
+package edu.temple.materialdesigntest.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import edu.temple.materialdesigntest.R;
 
-public class MainActivity extends AppCompatActivity {
+
+public class  MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private Button driverButton;
