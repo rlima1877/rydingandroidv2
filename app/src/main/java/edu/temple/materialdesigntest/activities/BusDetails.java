@@ -35,10 +35,14 @@ public class BusDetails extends AppCompatActivity {
         setupToolbar();
         initializeViews(getDataDummy());
 
+        if(getIntent().getExtras() != null) {
 
-        Bundle bundle = getIntent().getExtras();
-        busList = bundle.getParcelableArrayList("bus_list");
-        Log.d("JSON","BUS LIST INSIDE BUSDETAILS: " + busList.toString());
+            Bundle bundle = getIntent().getExtras();
+
+
+            busList = bundle.getParcelableArrayList("bus_list");
+            Log.d("JSON", "BUS LIST INSIDE BUSDETAILS: " + busList.toString());
+        }
 
 /*        if (getIntent().getExtras() != null) {
             for (String a : getIntent().getExtras().getStringArrayList("items_to_parse")) {
@@ -46,12 +50,7 @@ public class BusDetails extends AppCompatActivity {
             }
         }*/
 
-        toMapButton = (Button) findViewById(R.id.toMapButton);
-        toMapButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), MapsActivity.class));
-            }
-        });
+
     }
 
     private void setupToolbar(){
@@ -105,8 +104,7 @@ public class BusDetails extends AppCompatActivity {
 
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){
-            Toast.makeText(this, "Hey you just hit " + item.getTitle(), Toast.LENGTH_LONG).show();
-
+            startActivity(new Intent(this.getApplicationContext(), MapsActivity.class));
 
             //Bellow code sends data to MapActivity.class
 
