@@ -1,5 +1,6 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class BusDetails extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BusDetailsAdapter busDetailsAdapter;
     private List<Bus> busList;
+    private Button toMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,13 @@ public class BusDetails extends AppCompatActivity {
                 Log.d("=======", "Data " + a);
             }
         }*/
+
+        toMapButton = (Button) findViewById(R.id.toMapButton);
+        toMapButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), MapsActivity.class));
+            }
+        });
     }
 
     private void setupToolbar(){
