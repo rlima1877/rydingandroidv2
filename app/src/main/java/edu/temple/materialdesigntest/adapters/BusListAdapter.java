@@ -60,7 +60,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder,final int position) {
 
-        Bus currentBus = buses.get(position);
+        final Bus currentBus = buses.get(position);
 
         holder.icon.setImageResource(R.drawable.bus_icon_32);
         holder.busNumber.setText(Integer.toString(currentBus.getBusNumber()));
@@ -76,7 +76,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), BusDetails.class);
-                intent.putParcelableArrayListExtra("bus_list", (ArrayList<Bus>) buses);
+                intent.putExtra("Bus", currentBus);
 
                 view.getContext().startActivity(intent);
 

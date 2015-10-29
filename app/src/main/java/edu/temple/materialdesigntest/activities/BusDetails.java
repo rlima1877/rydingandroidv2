@@ -13,19 +13,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusDetailsAdapter;
+import edu.temple.materialdesigntest.adapters.BusListAdapter;
 import edu.temple.materialdesigntest.model.Bus;
+import edu.temple.materialdesigntest.model.BusStop;
+import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class BusDetails extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private BusDetailsAdapter busDetailsAdapter;
-    private List<Bus> busList;
+    private Bus bus;
+    private BusStop busStop;
     private Button toMapButton;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
+
+    public static String url = "http://templecs.com/bus/getbusroute?busid=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +51,11 @@ public class BusDetails extends AppCompatActivity {
         setContentView(R.layout.activity_bus_details);
 
         setupToolbar();
-        initializeViews(getDataDummy());
-
         if(getIntent().getExtras() != null) {
-
             Bundle bundle = getIntent().getExtras();
-
-
-            busList = bundle.getParcelableArrayList("bus_list");
-            Log.d("JSON", "BUS LIST INSIDE BUSDETAILS: " + busList.toString());
+            bus = (Bus)bundle.get("Bus");
+            url += bus.getBusID();
+            pullData();
         }
 
 /*        if (getIntent().getExtras() != null) {
@@ -61,31 +75,53 @@ public class BusDetails extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initializeViews(List<Bus> list){
+    private void initializeViews(List<BusStop> list){
         recyclerView = (RecyclerView) findViewById(R.id.listBusDetails);
         busDetailsAdapter = new BusDetailsAdapter(this, list);
         recyclerView.setAdapter(busDetailsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //Pulls data from webservice and initialize list view
+    public void pullData(){
+        final List<BusStop> busStopList = new ArrayList<BusStop>();
+        volleySingleton = VolleySingleton.getsInstance();
+        requestQueue = VolleySingleton.getsInstance().getmRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
 
-    //this method mocks the call from json.
-    public static List<Bus> getDataDummy() {
+                try {
 
-        List<Bus> buses = new ArrayList<Bus>();
-        int[] busNumbers = {56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56};
-        String[] busRoutes = {"Inbound", "Northbound", "Northbound", "Inbound",
-                "Inbound", "Northbound", "Inbound", "Inbound", "Inbound", "Northbound", "Northbound",
-                "Inbound", "Inbound", "Northbound", "Northbound", "Inbound", "Northbound"};
+                    JSONArray points = response.getJSONArray("points");
 
-        for (int i = 0; i < busNumbers.length && i < busRoutes.length; i++) {
-            Bus currentBus = new Bus();
-            currentBus.setBusNumber(busNumbers[i]);
-            currentBus.setBusRoute(busRoutes[i]);
-            buses.add(currentBus);
-        }
-        return buses;
+                    for(int i= 0; i < points.length(); i++){
+                        BusStop currentStop = new BusStop();
+                        JSONObject currentObject = points.getJSONObject(i);
+                        currentStop.setBusID(Integer.parseInt(currentObject.getString("BusID")));
+                        currentStop.setName(currentObject.getString("Name"));
+                        currentStop.setGeoLat(currentObject.getDouble("Latitude"));
+                        currentStop.setGeoLong(currentObject.getDouble("Longitude"));
+                        currentStop.setBusNumber(bus.getBusNumber());
+                        busStopList.add(currentStop);
+                    }
+                    //once data is pulled, initialize listview.
+                    initializeViews(busStopList);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("JSON", error.getMessage());
+            }
+        });
+        requestQueue.add(request);
     }
+
 
 
     @Override

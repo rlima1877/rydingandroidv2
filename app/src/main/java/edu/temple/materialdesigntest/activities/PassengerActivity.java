@@ -112,7 +112,7 @@ public class PassengerActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("JSON", "ERROR");
+                Log.d("JSON", error.getMessage());
             }
         });
         requestQueue.add(request);
