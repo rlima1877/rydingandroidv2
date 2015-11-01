@@ -68,17 +68,17 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     public void OpenView(View view){
-        //Intent intent = new Intent(this, DriverView.class);
+        Intent intent = new Intent(this, DriverView.class);
         NumberPicker routepic = (NumberPicker)findViewById(R.id.Route);
         NumberPicker directionpic = (NumberPicker)findViewById(R.id.Direction);
         String route = routepic.getDisplayedValues()[routepic.getValue()];
         String direction = directionpic.getDisplayedValues()[directionpic.getValue()];
-        //intent.putExtra("route", route);
-        //intent.putExtra("direction", direction);
-        //startActivity(intent);
+        intent.putExtra("route", route);
+        intent.putExtra("direction", direction);
+        startActivity(intent);
 
         //TODO - create the next activity and open it
-        Toast.makeText(this, "Route: " + route + ", Direction: " + direction, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Route: " + route + ", Direction: " + direction, Toast.LENGTH_LONG).show();
     }
 
 }
