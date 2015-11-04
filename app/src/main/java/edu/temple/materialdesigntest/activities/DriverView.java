@@ -6,11 +6,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import edu.temple.materialdesigntest.R;
 
-public class DriverView extends Activity {
+public class DriverView extends AppCompatActivity {
 
     private String route;
     private String direction;

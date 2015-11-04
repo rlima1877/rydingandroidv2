@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -44,6 +45,7 @@ public class DriverActivity extends AppCompatActivity {
     private Spinner BusNumberSpin;
     private Spinner Direction;
     private Button select;
+    private EditText busid;
     public static final String url = "http://templecs.com/bus/getallbuses";
 
     @Override
@@ -131,6 +133,7 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     private void initializeViews(List<Integer> list){
+        busid = (EditText) findViewById(R.id.busid);
         BusNumberSpin = (Spinner) findViewById(R.id.spinner);
         Direction = (Spinner) findViewById(R.id.spinner2);
         select = (Button) findViewById(R.id.button);
@@ -151,17 +154,18 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     public void OpenView(View view){
-       // Intent intent = new Intent(this, DriverView.class);
+
+        Intent intent = new Intent(this, DriverView.class);
        // NumberPicker routepic = (NumberPicker)findViewById(R.id.Route);
        // NumberPicker directionpic = (NumberPicker)findViewById(R.id.Direction)
        // String route = routepic.getDisplayedValues()[routepic.getValue()];
        // String direction = directionpic.getDisplayedValues()[directionpic.getValue()];
-       // intent.putExtra("route", route);
-       // intent.putExtra("direction", direction);
-       // startActivity(intent);
+        intent.putExtra("route", BusNumberSpin.getSelectedItem().toString());
+        intent.putExtra("direction", Direction.getSelectedItem().toString());
+        intent.putExtra("busid",busid.getText().toString());
+        startActivity(intent);
 
-        //TODO - create the next activity and open it
-        //Toast.makeText(this, "Route: " + route + ", Direction: " + direction, Toast.LENGTH_LONG).show();
+
     }
 
 }
