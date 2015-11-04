@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -22,15 +23,14 @@ import org.json.JSONObject;
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 
-public class DriverView extends Activity {
+public class DriverView extends AppCompatActivity {
 
     private String route;
     private String direction;
     private int id;
     private double latitude;
     private double longitude;
-
-
+    
     //Location lastKnownLocation;
 
     @Override
