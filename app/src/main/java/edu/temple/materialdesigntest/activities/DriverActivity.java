@@ -73,11 +73,11 @@ public class DriverActivity extends AppCompatActivity {
                     JSONArray buses = response.getJSONArray("buses");
 
                     for(int i= 0; i < buses.length(); i++){
-                        int currentbusnumebr;
+                        int currentbusnumber;
                         JSONObject currentObject = buses.getJSONObject(i);
 
-                        currentbusnumebr = (Integer.parseInt(currentObject.getString("BusNumber")));
-                        busListTemp.add(currentbusnumebr);
+                        currentbusnumber = (Integer.parseInt(currentObject.getString("BusNumber")));
+                        busListTemp.add(currentbusnumber);
                     }
 
                     //once data is pulled, initialize listview.
