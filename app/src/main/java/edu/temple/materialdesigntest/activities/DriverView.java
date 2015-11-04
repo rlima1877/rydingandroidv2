@@ -27,7 +27,7 @@ public class DriverView extends AppCompatActivity {
 
     private String route;
     private String direction;
-    private int id;
+    private String id;
     private double latitude;
     private double longitude;
     
@@ -41,6 +41,7 @@ public class DriverView extends AppCompatActivity {
         //get route and direction submitted from DriverActivity
         route = getIntent().getExtras().getString("route");
         direction = getIntent().getExtras().getString("direction");
+        id = getIntent().getExtras().getString("busid");
 
         //PLACEHOLDER - display these values to show they were passed successfully
         TextView routeText = (TextView)findViewById(R.id.route);
