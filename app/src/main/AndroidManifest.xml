@@ -48,6 +48,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.DriverView"
+            android:label="@string/title_activity_driver"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DriverActivity" />
+        </activity>
         <activity android:name=".activities.PassengerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

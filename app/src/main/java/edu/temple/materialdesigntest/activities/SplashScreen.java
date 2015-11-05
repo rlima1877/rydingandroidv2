@@ -3,10 +3,11 @@ package edu.temple.materialdesigntest.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import edu.temple.materialdesigntest.R;
 
-public class SplashScreen extends Activity {
+public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
