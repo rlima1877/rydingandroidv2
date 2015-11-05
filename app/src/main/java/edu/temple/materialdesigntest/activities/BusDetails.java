@@ -9,9 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,9 +26,9 @@ import java.util.List;
 
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusDetailsAdapter;
-import edu.temple.materialdesigntest.adapters.BusListAdapter;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.model.BusStop;
+import edu.temple.materialdesigntest.utilities.BusStopService;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class BusDetails extends AppCompatActivity {
@@ -55,7 +53,15 @@ public class BusDetails extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             bus = (Bus)bundle.get("Bus");
             url += bus.getBusID();
-            pullData();
+            BusStopService readBusStopJSON = new BusStopService(this, url);
+            Thread threat = new Thread(readBusStopJSON);
+            threat.start();
+            try{
+                threat.join();
+            }catch(InterruptedException ie){
+                ie.printStackTrace();
+            }
+            initializeViews(readBusStopJSON.getBusStopList());
         }
 
 /*        if (getIntent().getExtras() != null) {

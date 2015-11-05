@@ -27,6 +27,7 @@ import java.util.List;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusListAdapter;
+import edu.temple.materialdesigntest.utilities.BusService;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class PassengerActivity extends AppCompatActivity {
@@ -43,7 +44,16 @@ public class PassengerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
         setupToolbar();
-        pullData();
+
+        BusService loadBus = new BusService(this, url);
+        Thread threat = new Thread(loadBus);
+        threat.start();
+        try{
+            threat.join();
+        }catch(InterruptedException ie){
+            ie.printStackTrace();
+        }
+        initializeViews(loadBus.getBusList());
     }
 
     private void setupToolbar(){
@@ -118,26 +128,6 @@ public class PassengerActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-
-    //this method mocks the call from json.
-    public static List<Bus> getDataDummy() {
-
-        List<Bus> buses = new ArrayList<Bus>();
-        int[] busNumbers = {56, 45, 34, 65, 34, 35, 37, 90, 43, 67, 98, 30, 56, 45, 34, 65, 34};
-        String[] busRoutes = {"Inbound", "Northbound", "Northbound", "Inbound",
-                "Inbound", "Northbound", "Inbound", "Inbound", "Inbound", "Northbound", "Northbound",
-                "Inbound", "Inbound", "Northbound", "Northbound", "Inbound", "Northbound"};
-
-        for (int i = 0; i < busNumbers.length && i < busRoutes.length; i++) {
-            Bus currentBus = new Bus();
-            currentBus.setBusNumber(busNumbers[i]);
-            currentBus.setBusRoute(busRoutes[i]);
-            buses.add(currentBus);
-        }
-        return buses;
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflate the menu
@@ -163,8 +153,6 @@ public class PassengerActivity extends AppCompatActivity {
         if (id == R.id.searchBar) {
             //startActivity(new Intent(this, SomeActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }
