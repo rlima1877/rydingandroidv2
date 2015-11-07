@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,6 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
     private int duration;
     List<BusStop> busStops = Collections.emptyList();
 
-
     public BusDetailsAdapter(Context context, List<BusStop> busStops){
         Log.d("JSON", "Context " + context.toString());
         this.context = context;
@@ -47,11 +47,8 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = inflater.inflate(R.layout.custom_detail_row, parent, false);
-
         MyViewHolder holder = new MyViewHolder(view);
-
         return holder;
     }
 
@@ -60,7 +57,6 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
         BusStop currentBusStop = busStops.get(position);
         holder.icon.setImageResource(R.drawable.bus_icon_32);
         holder.busNumber.setText(Integer.toString(currentBusStop.getBusNumber()));
-
         String locationUrl = "http://templecs.com/bus/getbuslocation?id=" + currentBusStop.getBusID();
         BusLocationService busLocationService = new BusLocationService(activity, locationUrl);
         Thread t1 = new Thread(busLocationService);
@@ -115,8 +111,6 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-
-
         TextView busNumber;
         TextView busETA;
         ImageView icon;
@@ -128,7 +122,4 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
             icon = (ImageView) itemView.findViewById(R.id.listDetailsIcon);
         }
     }
-
-
-
 }//end BusDetailsAdapter

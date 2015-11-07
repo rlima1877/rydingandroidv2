@@ -31,11 +31,10 @@ import edu.temple.materialdesigntest.utilities.BusService;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class PassengerActivity extends AppCompatActivity {
-
-    private RecyclerView recyclerView;
     private BusListAdapter busListAdapter;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+    private BusService loadBus;
 
     public static final String url = "http://templecs.com/bus/getallbuses";
 
@@ -44,8 +43,12 @@ public class PassengerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
         setupToolbar();
+    }
 
-        BusService loadBus = new BusService(this, url);
+    @Override
+    protected void onResume(){
+        super.onResume();
+        loadBus = new BusService(this, url);
         Thread threat = new Thread(loadBus);
         threat.start();
         try{
@@ -65,67 +68,10 @@ public class PassengerActivity extends AppCompatActivity {
     }
 
     private void initializeViews(List<Bus> list){
-        recyclerView = (RecyclerView) findViewById(R.id.busList);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.busList);
         busListAdapter = new BusListAdapter(this, list);
         recyclerView.setAdapter(busListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-    }
-
-    //Pulls data from webservice and initialize list view
-    public void pullData(){
-        final List<Bus> busListTemp = new ArrayList<Bus>();
-        volleySingleton = VolleySingleton.getsInstance();
-        requestQueue = VolleySingleton.getsInstance().getmRequestQueue();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-
-                    JSONArray buses = response.getJSONArray("buses");
-
-                    for(int i= 0; i < buses.length(); i++){
-                        Bus currentBus = new Bus();
-                        JSONObject currentObject = buses.getJSONObject(i);
-                        currentBus.setBusNumber(Integer.parseInt(currentObject.getString("BusNumber")));
-                        currentBus.setBusRoute(currentObject.getString("Direction"));
-                        currentBus.setBusID(Integer.parseInt(currentObject.getString("BusID")));
-                        busListTemp.add(currentBus);
-                    }
-
-                    //once data is pulled, initialize listview.
-                    initializeViews(busListTemp);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("JSON", error.getMessage());
-            }
-        });
-        requestQueue.add(request);
     }
 
     @Override

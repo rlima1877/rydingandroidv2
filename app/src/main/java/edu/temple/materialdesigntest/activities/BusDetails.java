@@ -2,6 +2,7 @@ package edu.temple.materialdesigntest.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,7 +35,6 @@ import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class BusDetails extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
     private BusStop busStop;
@@ -41,14 +42,13 @@ public class BusDetails extends AppCompatActivity {
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
-    public static String url = "http://templecs.com/bus/getbusroute?busid=";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String url = "http://templecs.com/bus/getbusroute?busid=";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_details);
-
         setupToolbar();
+
         if(getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             bus = (Bus)bundle.get("Bus");
@@ -63,13 +63,11 @@ public class BusDetails extends AppCompatActivity {
             }
             initializeViews(readBusStopJSON.getBusStopList());
         }
-
 /*        if (getIntent().getExtras() != null) {
             for (String a : getIntent().getExtras().getStringArrayList("items_to_parse")) {
                 Log.d("=======", "Data " + a);
             }
         }*/
-
 
     }
 
@@ -82,53 +80,11 @@ public class BusDetails extends AppCompatActivity {
     }
 
     private void initializeViews(List<BusStop> list){
-        recyclerView = (RecyclerView) findViewById(R.id.listBusDetails);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listBusDetails);
         busDetailsAdapter = new BusDetailsAdapter(this, list);
         recyclerView.setAdapter(busDetailsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
-    //Pulls data from webservice and initialize list view
-    public void pullData(){
-        final List<BusStop> busStopList = new ArrayList<BusStop>();
-        volleySingleton = VolleySingleton.getsInstance();
-        requestQueue = VolleySingleton.getsInstance().getmRequestQueue();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-
-                    JSONArray points = response.getJSONArray("points");
-
-                    for(int i= 0; i < points.length(); i++){
-                        BusStop currentStop = new BusStop();
-                        JSONObject currentObject = points.getJSONObject(i);
-                        currentStop.setBusID(Integer.parseInt(currentObject.getString("BusID")));
-                        currentStop.setName(currentObject.getString("Name"));
-                        currentStop.setGeoLat(currentObject.getDouble("Latitude"));
-                        currentStop.setGeoLong(currentObject.getDouble("Longitude"));
-                        currentStop.setBusNumber(bus.getBusNumber());
-                        busStopList.add(currentStop);
-                    }
-                    //once data is pulled, initialize listview.
-                    initializeViews(busStopList);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("JSON", error.getMessage());
-            }
-        });
-        requestQueue.add(request);
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,6 +99,10 @@ public class BusDetails extends AppCompatActivity {
         //control action bar menu using if or switch staments
 
         int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
 
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){

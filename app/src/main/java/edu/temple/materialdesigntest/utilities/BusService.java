@@ -12,7 +12,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import edu.temple.materialdesigntest.model.Bus;
-import edu.temple.materialdesigntest.model.BusStop;
 
 public class BusService implements Runnable {
 

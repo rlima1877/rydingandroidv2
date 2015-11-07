@@ -1,5 +1,6 @@
 package edu.temple.materialdesigntest.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -30,22 +31,17 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
     private LayoutInflater inflater;
     private Context context;
-
+    private Activity activity;
     List<Bus> buses = Collections.emptyList();
 
 
     public BusListAdapter(Context context, List<Bus> buses){
-
-
         Log.d("JSON", "Context " + context.toString());
-
-
         this.context=context;
         inflater = LayoutInflater.from(context);
         this.buses = buses;
-
+        this.activity = (Activity)context;
     }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,9 +55,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder,final int position) {
-
         final Bus currentBus = buses.get(position);
-
         holder.icon.setImageResource(R.drawable.bus_icon_32);
         holder.busNumber.setText(Integer.toString(currentBus.getBusNumber()));
         holder.busDirection.setText(currentBus.getBusRoute());
@@ -72,19 +66,14 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
         //Pass current bus to next activity.
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BusDetails.class);
+                Intent intent = new Intent(activity, BusDetails.class);
                 intent.putExtra("Bus", currentBus);
-
-                view.getContext().startActivity(intent);
-
-
-                Toast.makeText(context, "Clicked on bus: " + position, Toast.LENGTH_SHORT).show();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                activity.startActivity(intent);
             }
         });
-
     }
 
     //In case we want to let user delete an item from the list.
@@ -109,13 +98,10 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
         ImageView icon;
 
         public MyViewHolder(View itemView) {
-
             super(itemView);
             busNumber = (TextView) itemView.findViewById(R.id.textViewBusNumber);
             busDirection = (TextView) itemView.findViewById(R.id.textViewBusDirection);
             icon = (ImageView) itemView.findViewById(R.id.listIcon);
-
-
         }
     }
 
