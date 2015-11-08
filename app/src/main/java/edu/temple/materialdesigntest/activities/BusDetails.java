@@ -1,5 +1,6 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -37,10 +38,6 @@ public class BusDetails extends AppCompatActivity {
 
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
-    private BusStop busStop;
-    private Button toMapButton;
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +50,16 @@ public class BusDetails extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             bus = (Bus)bundle.get("Bus");
             url += bus.getBusID();
+            ProgressDialog progressDialog = ProgressDialog.show(this, "Loading", "Please wait!", true);
             BusStopService readBusStopJSON = new BusStopService(this, url);
             Thread threat = new Thread(readBusStopJSON);
             threat.start();
             try{
                 threat.join();
+                progressDialog.dismiss();
             }catch(InterruptedException ie){
                 ie.printStackTrace();
+                progressDialog.dismiss();
             }
             initializeViews(readBusStopJSON.getBusStopList());
         }

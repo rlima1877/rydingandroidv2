@@ -1,5 +1,6 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -43,20 +45,23 @@ public class PassengerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
         setupToolbar();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
+        ProgressDialog progressDialog = ProgressDialog.show(this, "Loading", "Please wait!", true);
         loadBus = new BusService(this, url);
         Thread threat = new Thread(loadBus);
         threat.start();
         try{
             threat.join();
+            progressDialog.dismiss();
         }catch(InterruptedException ie){
             ie.printStackTrace();
+            progressDialog.dismiss();
         }
         initializeViews(loadBus.getBusList());
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
     }
 
     private void setupToolbar(){

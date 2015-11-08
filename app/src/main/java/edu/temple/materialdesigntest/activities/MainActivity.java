@@ -36,7 +36,6 @@ public class  MainActivity extends AppCompatActivity {
             }
         });
 
-
         passengerButton = (Button) findViewById(R.id.buttonPassenger);
         passengerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -68,7 +67,6 @@ public class  MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 

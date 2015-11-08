@@ -72,11 +72,15 @@ public class BusStopService implements Runnable {
     private InputStream downloadUrl(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000 /* milliseconds */);
-        conn.setConnectTimeout(15000 /* milliseconds */);
+        conn.setReadTimeout(50000 /* milliseconds */);
+        conn.setConnectTimeout(50000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
-        conn.connect();
+        try{
+            conn.connect();
+        }catch(Exception e){
+            Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
         return conn.getInputStream();
     }
 
