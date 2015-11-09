@@ -55,21 +55,25 @@ public class DriverView extends AppCompatActivity {
 
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                Log.d("DRIVER", "onLocationChanged() called");
                 // Called when a new location is found by the GPS provider.
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                Log.d("DRIVER", "lat: " + latitude + ", long: " + longitude);
                 //Insert JSON call here
                 String url = "http://templecs.com/bus/setbuslocation?id=" + id + "&lat=" + latitude + "&lon=" + longitude + "&direction=" + direction;
+                Log.d("DRIVER", "url: " + url);
                 VolleySingleton volleySingleton = VolleySingleton.getsInstance();
                 RequestQueue requestQueue = VolleySingleton.getsInstance().getmRequestQueue();
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        Log.d("DRIVER", "onResponse() called");
                         try {
 
                             String status = response.getString("status");
                             String message = response.getString("message");
+                            Log.d("DRIVER", "status: " + status + ", message: " + message);
                             if (!"success".equals(status)) {
                                 Log.d("DRIVER", "Setting bus location failed: " + message);
                             }
