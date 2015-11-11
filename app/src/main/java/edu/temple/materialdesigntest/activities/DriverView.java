@@ -107,7 +107,6 @@ public class DriverView extends AppCompatActivity {
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        finish();
     }
     //Loop method for sending updates
     //lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
