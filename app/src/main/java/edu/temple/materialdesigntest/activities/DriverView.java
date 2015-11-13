@@ -1,13 +1,12 @@
 package edu.temple.materialdesigntest.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,10 +15,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.network.VolleySingleton;
@@ -39,7 +36,9 @@ public class DriverView extends AppCompatActivity {
     private TextView longitudeText;
     private TextView statusText;
     private TextView responseText;
-    
+    private  LocationListener locationListener;
+    private LocationManager locationManager;
+    private String locationProvider;
     //Location lastKnownLocation;
 
     @Override
@@ -67,10 +66,10 @@ public class DriverView extends AppCompatActivity {
         statusText.setText("Status: initialized");
 
         //the actual GPS part (not yet hooked into anything)
-        String locationProvider = LocationManager.GPS_PROVIDER ;
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationProvider = LocationManager.GPS_PROVIDER ;
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 Log.d("DRIVER", "onLocationChanged() called");
                 statusText.setText("Status: onLocationChanged() called");
@@ -135,6 +134,10 @@ public class DriverView extends AppCompatActivity {
     }
     //Loop method for sending updates
     //lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        locationListener.onLocationChanged(locationManager.getLastKnownLocation(locationProvider));
+    }
 
 }
