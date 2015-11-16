@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -41,8 +42,14 @@ public class DriverView extends AppCompatActivity {
     private String locationProvider;
     //Location lastKnownLocation;
 
+    private PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    private PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        wl.acquire();
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driverview);
 
@@ -124,13 +131,14 @@ public class DriverView extends AppCompatActivity {
         locationListener.onLocationChanged(locationManager.getLastKnownLocation(locationProvider));
 
         //Update every minute or when you change 50 meters
-        locationManager.requestLocationUpdates(locationProvider, (1000*60*1), 50, locationListener);
+        locationManager.requestLocationUpdates(locationProvider, (3000), 50, locationListener);
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
+        wl.release();
     }
     //Loop method for sending updates
     //lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
@@ -138,6 +146,10 @@ public class DriverView extends AppCompatActivity {
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         locationListener.onLocationChanged(locationManager.getLastKnownLocation(locationProvider));
+        wl.acquire();
     }
-
+    @Override
+    public void onBackPressed() {
+        wl.release();
+    }
 }
