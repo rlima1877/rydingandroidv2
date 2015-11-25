@@ -5,7 +5,7 @@
 
         <item android:id="@+id/locationIcon" android:title="location_icon"
             android:orderInCategory="100"
-            android:icon="@drawable/gps_icon64"
+            android:icon="@drawable/gps_icon_64"
             app:showAsAction="always"
             />
 

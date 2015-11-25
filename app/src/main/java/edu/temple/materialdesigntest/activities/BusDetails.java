@@ -11,18 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +20,32 @@ import edu.temple.materialdesigntest.adapters.BusDetailsAdapter;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.model.BusStop;
 import edu.temple.materialdesigntest.utilities.BusStopService;
-import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class BusDetails extends AppCompatActivity {
 
+
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
+    private ArrayList<BusStop> busGeos;
+    public static final String PREFS_NAME = "MyPrefsFile";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(savedInstanceState == null) {
+            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED...savedInstanceState == null: " );
+        }
+
         String url = "http://templecs.com/bus/getbusroute?busid=";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_details);
         setupToolbar();
 
         if(getIntent().getExtras() != null) {
+
+            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED first if statem.... ");
+
             Bundle bundle = getIntent().getExtras();
             bus = (Bus)bundle.get("Bus");
             url += bus.getBusID();
@@ -61,8 +60,23 @@ public class BusDetails extends AppCompatActivity {
                 ie.printStackTrace();
                 progressDialog.dismiss();
             }
+            busGeos = readBusStopJSON.getBusStopList();
             initializeViews(readBusStopJSON.getBusStopList());
         }
+        //user pressed back button, retrieving data from onSavedInstanceState
+        if(savedInstanceState != null) {
+
+            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED second if statem.... ");
+
+            busGeos = savedInstanceState.getParcelableArrayList("bus_data");
+
+
+            initializeViews(busGeos);
+        }
+
+
+
+
 /*        if (getIntent().getExtras() != null) {
             for (String a : getIntent().getExtras().getStringArrayList("items_to_parse")) {
                 Log.d("=======", "Data " + a);
@@ -106,20 +120,21 @@ public class BusDetails extends AppCompatActivity {
 
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){
-            startActivity(new Intent(this.getApplicationContext(), MapsActivity.class));
 
             //Bellow code sends data to MapActivity.class
 
-/*          Intent intent = new Intent(getActivityContext(), MapActivity.class);
-            intent.putParcelable("bus_list", (Bus) currentBusInformation);
 
-            view.getContext().startActivity(intent);*/
+            Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
+            intent.putExtra("current_bus", busGeos.get(0));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
 
 
             //To grab data in MapActivity use bellow code inside onOncreate in MapActivity.
 /*
             Bundle bundle = getIntent().getExtras();
-            currentBus = bundle.getParcelable("bus_list");
+            currentBus = bundle.getParcelable("current_bus");
             Log.d("JSON","CURRENT BUS OBJECT: " + currentBus.toString());
 */
 
@@ -129,5 +144,36 @@ public class BusDetails extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+
+        Log.d("DEBUGBUSDETAILS", "onSaveInstanceStateCalled.... " + busGeos.get(0).getBusNumber());
+
+        bundle.putParcelableArrayList("bus_data", (ArrayList<BusStop>) busGeos);
+        bundle.putChar("random",'c');
+        super.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+        Log.d("DEBUGBUSDETAILS", "ONRESTORE CALLED.... ");
+
+
+        busGeos = bundle.getParcelableArrayList("bus_data");
+
+
+        initializeViews(busGeos);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+
+
     }
 }
