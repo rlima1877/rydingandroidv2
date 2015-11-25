@@ -27,7 +27,6 @@ public class BusDetails extends AppCompatActivity {
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
     private ArrayList<BusStop> busGeos;
-    public static final String PREFS_NAME = "MyPrefsFile";
 
 
     @Override
@@ -125,7 +124,8 @@ public class BusDetails extends AppCompatActivity {
 
 
             Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
-            intent.putExtra("current_bus", busGeos.get(0));
+            intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
+            intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
