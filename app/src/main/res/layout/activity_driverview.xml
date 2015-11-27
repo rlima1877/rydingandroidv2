@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="20px">
 
     <TextView
+        android:layout_marginTop="100px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Route: "
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:text="Current Bus Number: "
+        android:textStyle="bold"
         android:id="@+id/route" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
         android:text="Direction: "
         android:id="@+id/direction" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
         android:text="Bus id: "
         android:id="@+id/busid" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
         android:text="Latitude: "
         android:id="@+id/latitude" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
         android:text="Longitude: "
         android:id="@+id/longitude" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status: "
-        android:id="@+id/status" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Server response: "
-        android:id="@+id/response" />
+
+    <Button
+        android:layout_width="400px"
+        android:layout_height="200px"
+        android:text="Stop"
+        android:background="@drawable/red_btn"
+        style="@style/ButtonText"
+        android:layout_gravity="center"
+        android:onClick="StopService"/>
 </LinearLayout>

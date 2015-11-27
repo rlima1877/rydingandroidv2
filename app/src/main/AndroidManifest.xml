@@ -85,5 +85,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BusDetails" />
         </activity>
+
+        <service android:name=".services.LocationUpdate" />
+
     </application>
 </manifest>

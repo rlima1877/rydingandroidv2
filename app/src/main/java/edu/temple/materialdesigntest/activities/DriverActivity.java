@@ -1,6 +1,9 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -36,17 +41,19 @@ import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusListAdapter;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.network.VolleySingleton;
+import edu.temple.materialdesigntest.utilities.BusService;
 
 public class DriverActivity extends AppCompatActivity {
-
 
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private Spinner BusNumberSpin;
     private Spinner Direction;
-    private Button select;
     private EditText busid;
+    private BusService loadBus;
     public static final String url = "http://templecs.com/bus/getallbuses";
+    private LinearLayout driverContent;
+    private ImageView loadingIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,77 +65,61 @@ public class DriverActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupToolbar();
-        pullData();
+
+        driverContent = (LinearLayout)findViewById(R.id.driverContent);
+        driverContent.setVisibility(View.GONE);
+        loadingIcon = (ImageView)findViewById(R.id.loadingIcon);
+        loadingIcon.setVisibility(View.VISIBLE);
+
+        GetBusInformation task = new GetBusInformation();
+        task.execute(this);
+        //pullData();
     }
 
-
-    public void pullData(){
-        final List<Integer> busListTemp = new ArrayList<Integer>();
-        volleySingleton = VolleySingleton.getsInstance();
-        requestQueue = VolleySingleton.getsInstance().getmRequestQueue();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                try {
-
-                    JSONArray buses = response.getJSONArray("buses");
-
-                    for(int i= 0; i < buses.length(); i++){
-                        int currentbusnumber;
-                        JSONObject currentObject = buses.getJSONObject(i);
-
-                        currentbusnumber = (Integer.parseInt(currentObject.getString("BusNumber")));
-                        busListTemp.add(currentbusnumber);
-                    }
-
-                    //once data is pulled, initialize listview.
-                    initializeViews(busListTemp);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+    private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
+        @Override
+        protected List<Bus> doInBackground(Activity...activities) {
+            loadBus = new BusService(activities[0], url);
+            Thread threat = new Thread(loadBus);
+            threat.start();
+            try{
+                threat.join();
+            }catch(InterruptedException ie){
+                ie.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("JSON", error.getMessage());
+            List<Bus> busList = loadBus.getBusList();
+            return busList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Bus> busList) {
+            List<Integer> busNumList = new ArrayList<>();
+            for(int i=0; i<busList.size(); i++){
+                busNumList.add(busList.get(i).getBusNumber());
             }
-        });
-        requestQueue.add(request);
+            initializeViews(busNumList);
+            loadingIcon.setVisibility(View.GONE);
+            driverContent.setVisibility(View.VISIBLE);
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         //inflate the menu
         getMenuInflater().inflate(R.menu.menu, menu);
-
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
-        if(id== R.id.action_settings){
-            Toast.makeText(this, "Hey you just hit " + item.getTitle(), Toast.LENGTH_LONG).show();
-            return true;
-        }
-
         if(id == android.R.id.home){
             NavUtils.navigateUpFromSameTask(this);
         }
-
         //when clicking tool bar search item do something..
         if(id == R.id.searchBar){
             //startActivity(new Intent(this, SomeActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -136,7 +127,6 @@ public class DriverActivity extends AppCompatActivity {
         busid = (EditText) findViewById(R.id.busid);
         BusNumberSpin = (Spinner) findViewById(R.id.spinner);
         Direction = (Spinner) findViewById(R.id.spinner2);
-        select = (Button) findViewById(R.id.button);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_values,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         Direction.setAdapter(adapter);
@@ -154,18 +144,15 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     public void OpenView(View view){
-
-        Intent intent = new Intent(this, DriverView.class);
-       // NumberPicker routepic = (NumberPicker)findViewById(R.id.Route);
-       // NumberPicker directionpic = (NumberPicker)findViewById(R.id.Direction)
-       // String route = routepic.getDisplayedValues()[routepic.getValue()];
-       // String direction = directionpic.getDisplayedValues()[directionpic.getValue()];
-        intent.putExtra("route", BusNumberSpin.getSelectedItem().toString());
-        intent.putExtra("direction", Direction.getSelectedItem().toString());
-        intent.putExtra("busid",busid.getText().toString());
-        startActivity(intent);
-
-
+        if(busid.getText().toString().length() > 0){
+            Intent intent = new Intent(this, DriverView.class);
+            intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
+            intent.putExtra("direction", Direction.getSelectedItem().toString());
+            intent.putExtra("busid",busid.getText().toString());
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
+        }
     }
-
 }

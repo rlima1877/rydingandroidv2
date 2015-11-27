@@ -1,46 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.temple.materialdesigntest.activities.DriverActivity">
+    tools:context="edu.temple.materialdesigntest.activities.DriverActivity"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar"/>
 
-    <Spinner
+    <ImageView
+        android:layout_marginTop="50px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_below="@+id/app_bar"
-        android:layout_alignParentStart="true" />
+        android:background="@drawable/spinner_black_20"
+        android:layout_gravity="center"
+        android:id="@+id/loadingIcon"
+        android:visibility="gone"/>
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner2"
-        android:layout_below="@+id/spinner"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/driverContent">
+        <Spinner
+            android:layout_marginTop="100px"
+            android:layout_width="500px"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_gravity="center"
+            android:padding="50px"
+            />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:onClick="OpenView"/>
+        <Spinner
+            android:layout_width="500px"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner2"
+            android:layout_gravity="center"
+            android:padding="50px"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberSigned"
-        android:ems="10"
-        android:id="@+id/busid"
-        android:layout_below="@+id/spinner2"
-        android:layout_alignParentStart="true" />
+        <EditText
+            android:layout_width="300px"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned"
+            android:ems="10"
+            android:id="@+id/busid"
+            android:layout_gravity="center"
+            android:hint="Bus ID"/>
 
+        <Button
+            android:background="@drawable/green_btn"
+            style="@style/ButtonText"
+            android:layout_width="400px"
+            android:layout_height="200px"
+            android:text="Start"
+            android:id="@+id/button"
+            android:onClick="OpenView"
+            android:layout_gravity="center"
+            android:layout_marginTop="50px"/>
 
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -110,4 +110,22 @@ public class ReadJSON {
         }
         return bus;
     }
+
+    public String readBusLocationUpdateJSON(InputStream in) throws IOException {
+        InputStreamReader inputStreamReader = new InputStreamReader(in);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        String tempStr = "";
+        while((tempStr = bufferedReader.readLine()) != null){
+            stringBuilder.append(tempStr);
+        }
+
+        try {
+            JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+            tempStr = jsonObject.toString();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        return tempStr;
+    }
 }
