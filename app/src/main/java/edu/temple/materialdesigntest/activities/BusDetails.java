@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class BusDetails extends AppCompatActivity {
     private String url = "http://templecs.com/bus/getbusroute?busid=";
     private LinearLayout busStopContent;
     private LinearLayout loadingIcon;
+    private boolean ready;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class BusDetails extends AppCompatActivity {
         setContentView(R.layout.activity_bus_details);
         setupToolbar();
 
+        ready = false;
         busStopContent = (LinearLayout)findViewById(R.id.busStopContent);
         busStopContent.setVisibility(View.GONE);
         loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
@@ -82,6 +85,7 @@ public class BusDetails extends AppCompatActivity {
             initializeViews(busStopList);
             loadingIcon.setVisibility(View.GONE);
             busStopContent.setVisibility(View.VISIBLE);
+            ready = true;
         }
     }
 
@@ -118,13 +122,18 @@ public class BusDetails extends AppCompatActivity {
 
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){
+            if(ready){
+                //Bellow code sends data to MapActivity.class
+                Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
+                intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
+                intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            else{
+                Toast.makeText(this, "Still loading, please wait...", Toast.LENGTH_SHORT).show();
+            }
 
-            //Bellow code sends data to MapActivity.class
-            Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
-            intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
-            intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
