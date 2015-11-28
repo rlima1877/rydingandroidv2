@@ -78,7 +78,6 @@ public class DriverActivity extends AppCompatActivity {
 
         GetBusInformation task = new GetBusInformation();
         task.execute(this);
-        //pullData();
     }
 
     private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
