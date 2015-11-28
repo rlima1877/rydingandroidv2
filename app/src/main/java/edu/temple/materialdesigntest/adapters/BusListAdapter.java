@@ -3,12 +3,14 @@ package edu.temple.materialdesigntest.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +76,12 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
                 activity.startActivity(intent);
             }
         });
+
+        if(position % 2 == 0){
+            holder.elementHolder.setBackgroundColor(Color.GRAY);
+            holder.busDirection.setTextColor(Color.BLACK);
+            holder.busNumber.setTextColor(Color.BLACK);
+        }
     }
 
     //In case we want to let user delete an item from the list.
@@ -96,12 +104,14 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
         TextView busNumber;
         TextView busDirection;
         ImageView icon;
+        LinearLayout elementHolder;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             busNumber = (TextView) itemView.findViewById(R.id.textViewBusNumber);
             busDirection = (TextView) itemView.findViewById(R.id.textViewBusDirection);
             icon = (ImageView) itemView.findViewById(R.id.listIcon);
+            elementHolder = (LinearLayout)itemView.findViewById(R.id.row_element);
         }
     }
 
