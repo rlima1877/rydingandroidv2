@@ -137,7 +137,7 @@ public class DriverActivity extends AppCompatActivity {
 
     private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle("Ryding Passenger");
+        toolbar.setTitle("Ryding Driver");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
