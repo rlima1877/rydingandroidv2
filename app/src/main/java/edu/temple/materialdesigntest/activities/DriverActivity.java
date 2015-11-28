@@ -146,22 +146,33 @@ public class DriverActivity extends AppCompatActivity {
 
     private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle("Ryding Passenger");
+        toolbar.setTitle("Ryding Driver");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void OpenView(View view){
-        if(busid.getText().toString().length() > 0){
-            Intent intent = new Intent(this, DriverView.class);
-            intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
-            intent.putExtra("direction", Direction.getSelectedItem().toString());
-            intent.putExtra("busid",busid.getText().toString());
-            startActivity(intent);
+        String busID = busid.getText().toString();
+        if(busID.length() > 0){
+            try {
+                int tempID = Integer.parseInt(busID);
+                Intent intent = new Intent(this, DriverView.class);
+                intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
+                intent.putExtra("direction", Direction.getSelectedItem().toString());
+                intent.putExtra("busid",String.valueOf(tempID));
+                startActivity(intent);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
+            }
         }
         else{
             Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

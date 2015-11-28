@@ -1,7 +1,9 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,69 +23,66 @@ import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusDetailsAdapter;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.model.BusStop;
+import edu.temple.materialdesigntest.utilities.BusService;
 import edu.temple.materialdesigntest.utilities.BusStopService;
 
 public class BusDetails extends AppCompatActivity {
 
-
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
     private ArrayList<BusStop> busGeos;
-
+    private String url = "http://templecs.com/bus/getbusroute?busid=";
+    private LinearLayout busStopContent;
+    private LinearLayout loadingIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        if(savedInstanceState == null) {
-            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED...savedInstanceState == null: " );
-        }
-
-        String url = "http://templecs.com/bus/getbusroute?busid=";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_details);
         setupToolbar();
 
+        busStopContent = (LinearLayout)findViewById(R.id.busStopContent);
+        busStopContent.setVisibility(View.GONE);
+        loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
+        loadingIcon.setVisibility(View.VISIBLE);
+
         if(getIntent().getExtras() != null) {
-
-            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED first if statem.... ");
-
             Bundle bundle = getIntent().getExtras();
             bus = (Bus)bundle.get("Bus");
             url += bus.getBusID();
-            ProgressDialog progressDialog = ProgressDialog.show(this, "Loading", "Please wait!", true);
-            BusStopService readBusStopJSON = new BusStopService(this, url);
+            GetBusInformation task = new GetBusInformation();
+            task.execute(this);
+        }
+
+        //user pressed back button, retrieving data from onSavedInstanceState
+        if(savedInstanceState != null) {
+            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED second if statem.... ");
+            busGeos = savedInstanceState.getParcelableArrayList("bus_data");
+            initializeViews(busGeos);
+        }
+    }
+
+    private class GetBusInformation extends AsyncTask<Activity, Void, List<BusStop>> {
+        @Override
+        protected List<BusStop> doInBackground(Activity...activities) {
+            BusStopService readBusStopJSON = new BusStopService(activities[0], url);
             Thread threat = new Thread(readBusStopJSON);
             threat.start();
             try{
                 threat.join();
-                progressDialog.dismiss();
             }catch(InterruptedException ie){
                 ie.printStackTrace();
-                progressDialog.dismiss();
             }
             busGeos = readBusStopJSON.getBusStopList();
-            initializeViews(readBusStopJSON.getBusStopList());
-        }
-        //user pressed back button, retrieving data from onSavedInstanceState
-        if(savedInstanceState != null) {
-
-            Log.d("DEBUGBUSDETAILS", "OnCreate being CALLED second if statem.... ");
-
-            busGeos = savedInstanceState.getParcelableArrayList("bus_data");
-
-
-            initializeViews(busGeos);
+            return busGeos;
         }
 
-
-
-
-/*        if (getIntent().getExtras() != null) {
-            for (String a : getIntent().getExtras().getStringArrayList("items_to_parse")) {
-                Log.d("=======", "Data " + a);
-            }
-        }*/
-
+        @Override
+        protected void onPostExecute(List<BusStop> busStopList) {
+            initializeViews(busStopList);
+            loadingIcon.setVisibility(View.GONE);
+            busStopContent.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupToolbar(){
@@ -109,8 +110,6 @@ public class BusDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        //control action bar menu using if or switch staments
-
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
@@ -121,36 +120,18 @@ public class BusDetails extends AppCompatActivity {
         if(id == R.id.locationIcon){
 
             //Bellow code sends data to MapActivity.class
-
-
             Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
             intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
             intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
-
-
-            //To grab data in MapActivity use bellow code inside onOncreate in MapActivity.
-/*
-            Bundle bundle = getIntent().getExtras();
-            currentBus = bundle.getParcelable("current_bus");
-            Log.d("JSON","CURRENT BUS OBJECT: " + currentBus.toString());
-*/
-
-
-
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
-
         Log.d("DEBUGBUSDETAILS", "onSaveInstanceStateCalled.... " + busGeos.get(0).getBusNumber());
-
         bundle.putParcelableArrayList("bus_data", (ArrayList<BusStop>) busGeos);
         bundle.putChar("random",'c');
         super.onSaveInstanceState(bundle);
@@ -160,20 +141,12 @@ public class BusDetails extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle bundle) {
         super.onRestoreInstanceState(bundle);
         Log.d("DEBUGBUSDETAILS", "ONRESTORE CALLED.... ");
-
-
         busGeos = bundle.getParcelableArrayList("bus_data");
-
-
         initializeViews(busGeos);
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-
-
     }
 }
