@@ -123,12 +123,17 @@ public class BusDetails extends AppCompatActivity {
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){
             if(ready){
-                //Bellow code sends data to MapActivity.class
-                Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
-                intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
-                intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if(busGeos.size() != 0){
+                    //Bellow code sends data to MapActivity.class
+                    Intent intent = new Intent(this.getApplicationContext(), MapsActivity.class);
+                    intent.putExtra("current_bus_id", busGeos.get(0).getBusID());
+                    intent.putExtra("current_bus_number", busGeos.get(0).getBusNumber());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(this, "Bus route is not available to display", Toast.LENGTH_SHORT).show();
+                }
             }
             else{
                 Toast.makeText(this, "Still loading, please wait...", Toast.LENGTH_SHORT).show();
