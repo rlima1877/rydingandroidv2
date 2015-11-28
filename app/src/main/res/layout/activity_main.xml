@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
     tools:context="edu.temple.materialdesigntest.activities.MainActivity">
 
-    <include android:id="@+id/app_bar" layout="@layout/app_bar">
-
-
-    </include>
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Driver"
+        android:layout_gravity="center"
+        android:text="Driver Mode"
+        android:textSize="25sp"/>
+    <Button
+        android:layout_width="500px"
+        android:layout_height="500px"
         android:id="@+id/buttonDriver"
-        android:layout_marginTop="92dp"
         android:layout_below="@+id/app_bar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
+        android:background="@drawable/bus_driver"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_marginTop="100px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passenger"
+        android:layout_gravity="center"
+        android:text="Passenger Mode"
+        android:textSize="25sp"/>
+    <Button
+        android:layout_width="500px"
+        android:layout_height="500px"
         android:id="@+id/buttonPassenger"
         android:layout_below="@+id/buttonDriver"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@drawable/passenger"
+        android:layout_gravity="center"/>
 
-</RelativeLayout>
+</LinearLayout>

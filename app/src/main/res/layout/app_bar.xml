@@ -6,8 +6,5 @@
     android:background="@color/colorAccent"
     app:theme="@style/MyCustomToolbarTheme"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-
-
     >
-
 </android.support.v7.widget.Toolbar>

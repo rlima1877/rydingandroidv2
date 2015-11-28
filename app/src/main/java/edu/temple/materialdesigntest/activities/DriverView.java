@@ -58,6 +58,11 @@ public class DriverView extends AppCompatActivity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                String status = intent.getStringExtra("Status");
+                if(status == "false"){
+                    Toast.makeText(getApplicationContext(), "Cannot find bus with ID " + id, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
                 double lat = intent.getDoubleExtra("Lat", 0);
                 double lon = intent.getDoubleExtra("Lon", 0);
                 latitudeText.setText("Latitude: " + String.valueOf(lat));

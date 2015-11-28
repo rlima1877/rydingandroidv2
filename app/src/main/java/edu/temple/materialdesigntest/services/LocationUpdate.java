@@ -46,15 +46,16 @@ public class LocationUpdate extends Service {
             locationProvider = LocationManager.GPS_PROVIDER;
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             locationListener = getLocationListener();
-            locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
+            locationManager.requestLocationUpdates(locationProvider, 10000, 0, locationListener);
             return START_NOT_STICKY;
         }
     }
 
-    public void sendResult(double lat, double lon) {
+    public void sendResult(double lat, double lon, String status) {
         Intent intent = new Intent("LocationService");
         intent.putExtra("Lat", lat);
         intent.putExtra("Lon", lon);
+        intent.putExtra("Status", status);
         broadcaster.sendBroadcast(intent);
     }
 
@@ -65,7 +66,7 @@ public class LocationUpdate extends Service {
                 // Called when a new location is found by the GPS provider.
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                sendResult(latitude, longitude);
+                sendResult(latitude, longitude, null);
                 Log.d("DRIVER", "lat: " + latitude + ", long: " + longitude);
                 //Insert JSON call here
                 String url = "http://templecs.com/bus/setbuslocation?id=" + id + "&lat=" + latitude + "&lon=" + longitude + "&direction=" + direction;
@@ -77,6 +78,9 @@ public class LocationUpdate extends Service {
                     threat.join();
                 }catch(InterruptedException ie){
                     ie.printStackTrace();
+                }
+                if(updateBusLocationService.getResult() == "false"){
+                    sendResult(0, 0, "false");
                 }
                 Toast.makeText(getApplicationContext(), updateBusLocationService.getResult(), Toast.LENGTH_SHORT).show();
             }

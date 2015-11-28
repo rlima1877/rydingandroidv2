@@ -122,7 +122,7 @@ public class ReadJSON {
 
         try {
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-            tempStr = jsonObject.toString();
+            tempStr = jsonObject.getString("status");
         } catch (JSONException je) {
             je.printStackTrace();
         }

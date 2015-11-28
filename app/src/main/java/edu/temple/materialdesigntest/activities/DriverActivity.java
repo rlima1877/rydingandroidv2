@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -35,7 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusListAdapter;
@@ -53,7 +58,7 @@ public class DriverActivity extends AppCompatActivity {
     private BusService loadBus;
     public static final String url = "http://templecs.com/bus/getallbuses";
     private LinearLayout driverContent;
-    private ImageView loadingIcon;
+    private LinearLayout loadingIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +73,11 @@ public class DriverActivity extends AppCompatActivity {
 
         driverContent = (LinearLayout)findViewById(R.id.driverContent);
         driverContent.setVisibility(View.GONE);
-        loadingIcon = (ImageView)findViewById(R.id.loadingIcon);
+        loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
         loadingIcon.setVisibility(View.VISIBLE);
 
         GetBusInformation task = new GetBusInformation();
         task.execute(this);
-        //pullData();
     }
 
     private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
@@ -124,13 +128,18 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     private void initializeViews(List<Integer> list){
+        Set<Integer> hs = new HashSet<>();
+        hs.addAll(list);
+        list.clear();
+        list.addAll(hs);
+        Collections.sort(list);
         busid = (EditText) findViewById(R.id.busid);
         BusNumberSpin = (Spinner) findViewById(R.id.spinner);
         Direction = (Spinner) findViewById(R.id.spinner2);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_values,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         Direction.setAdapter(adapter);
-        ArrayAdapter<Integer> adapter1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<Integer> adapter1 = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line, list);
         BusNumberSpin.setAdapter(adapter1);
     }
 
@@ -144,15 +153,26 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     public void OpenView(View view){
-        if(busid.getText().toString().length() > 0){
-            Intent intent = new Intent(this, DriverView.class);
-            intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
-            intent.putExtra("direction", Direction.getSelectedItem().toString());
-            intent.putExtra("busid",busid.getText().toString());
-            startActivity(intent);
+        String busID = busid.getText().toString();
+        if(busID.length() > 0){
+            try {
+                int tempID = Integer.parseInt(busID);
+                Intent intent = new Intent(this, DriverView.class);
+                intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
+                intent.putExtra("direction", Direction.getSelectedItem().toString());
+                intent.putExtra("busid",String.valueOf(tempID));
+                startActivity(intent);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
+            }
         }
         else{
             Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

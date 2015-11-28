@@ -11,14 +11,23 @@
         android:id="@+id/app_bar"
         layout="@layout/app_bar"/>
 
-    <ImageView
-        android:layout_marginTop="50px"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/spinner_black_20"
-        android:layout_gravity="center"
         android:id="@+id/loadingIcon"
-        android:visibility="gone"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Loading, please wait..."/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,18 +39,16 @@
             android:layout_width="500px"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
-            android:layout_gravity="center"
-            android:padding="50px"
-            />
+            android:layout_gravity="center"/>
 
         <Spinner
             android:layout_width="500px"
             android:layout_height="wrap_content"
             android:id="@+id/spinner2"
-            android:layout_gravity="center"
-            android:padding="50px"/>
+            android:layout_gravity="center"/>
 
         <EditText
+            android:layout_marginTop="50px"
             android:layout_width="300px"
             android:layout_height="wrap_content"
             android:inputType="numberSigned"
@@ -49,17 +56,14 @@
             android:id="@+id/busid"
             android:layout_gravity="center"
             android:hint="Bus ID"/>
-
         <Button
             android:background="@drawable/green_btn"
             style="@style/ButtonText"
             android:layout_width="400px"
-            android:layout_height="200px"
+            android:layout_height="150px"
             android:text="Start"
             android:id="@+id/button"
             android:onClick="OpenView"
-            android:layout_gravity="center"
-            android:layout_marginTop="50px"/>
-
+            android:layout_gravity="center" />
     </LinearLayout>
 </LinearLayout>

@@ -25,10 +25,6 @@ public class  MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle("Ryding");
-        setSupportActionBar(toolbar);
-
         driverButton = (Button) findViewById(R.id.buttonDriver);
         driverButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

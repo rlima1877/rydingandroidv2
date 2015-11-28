@@ -1,6 +1,8 @@
 package edu.temple.materialdesigntest.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,9 +38,9 @@ import edu.temple.materialdesigntest.network.VolleySingleton;
 
 public class PassengerActivity extends AppCompatActivity {
     private BusListAdapter busListAdapter;
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
     private BusService loadBus;
+    private LinearLayout passengerContent;
+    private LinearLayout loadingIcon;
 
     public static final String url = "http://templecs.com/bus/getallbuses";
 
@@ -45,18 +49,14 @@ public class PassengerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
         setupToolbar();
-        ProgressDialog progressDialog = ProgressDialog.show(this, "Loading", "Please wait!", true);
-        loadBus = new BusService(this, url);
-        Thread threat = new Thread(loadBus);
-        threat.start();
-        try{
-            threat.join();
-            progressDialog.dismiss();
-        }catch(InterruptedException ie){
-            ie.printStackTrace();
-            progressDialog.dismiss();
-        }
-        initializeViews(loadBus.getBusList());
+
+        passengerContent = (LinearLayout)findViewById(R.id.passsengerContent);
+        passengerContent.setVisibility(View.GONE);
+        loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
+        loadingIcon.setVisibility(View.VISIBLE);
+
+        GetBusInformation task = new GetBusInformation();
+        task.execute(this);
     }
 
     @Override
@@ -92,8 +92,7 @@ public class PassengerActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "Hey you just hit " + item.getTitle(), Toast.LENGTH_LONG).show();
-            return true;
+
         }
 
         if (id == android.R.id.home) {
@@ -105,5 +104,28 @@ public class PassengerActivity extends AppCompatActivity {
             //startActivity(new Intent(this, SomeActivity.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
+        @Override
+        protected List<Bus> doInBackground(Activity...activities) {
+            loadBus = new BusService(activities[0], url);
+            Thread threat = new Thread(loadBus);
+            threat.start();
+            try{
+                threat.join();
+            }catch(InterruptedException ie){
+                ie.printStackTrace();
+            }
+            List<Bus> busList = loadBus.getBusList();
+            return busList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Bus> busList) {
+            initializeViews(busList);
+            loadingIcon.setVisibility(View.GONE);
+            passengerContent.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:orientation="horizontal">
-
+    android:orientation="horizontal"
+    android:id="@+id/row_element">
 
     <ImageView
         android:id="@+id/listIcon"
@@ -12,7 +12,6 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/bus_icon_32"
         />
-
     <TextView
         android:id="@+id/textViewBusNumber"
         android:layout_gravity="center_vertical"
@@ -20,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="63"/>
-
     <TextView
         android:id="@+id/textViewSeparator"
         android:layout_gravity="center_vertical"
@@ -28,7 +26,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" | "/>
-
     <TextView
         android:id="@+id/textViewBusDirection"
         android:layout_gravity="center_vertical"
@@ -36,6 +33,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Northbound"/>
-
 
 </LinearLayout>

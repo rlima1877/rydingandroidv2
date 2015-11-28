@@ -2,12 +2,14 @@ package edu.temple.materialdesigntest.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +97,11 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
         duration += Integer.valueOf(temp.substring(0, index));
         holder.busETA.setText("Arriving at: " + currentBusStop.getName() + " in " + duration + " min(s)");
 
+        if(position % 2 == 0){
+            holder.elementHolder.setBackgroundColor(Color.GRAY);
+            holder.busETA.setTextColor(Color.BLACK);
+            holder.busNumber.setTextColor(Color.BLACK);
+        }
     }
 
     //In case we want to let user delete an item from the list.
@@ -114,12 +121,14 @@ public class BusDetailsAdapter extends RecyclerView.Adapter<BusDetailsAdapter.My
         TextView busNumber;
         TextView busETA;
         ImageView icon;
+        LinearLayout elementHolder;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             busNumber = (TextView) itemView.findViewById(R.id.textViewDetailsBusNumber);
             busETA = (TextView) itemView.findViewById(R.id.textViewEAT);
             icon = (ImageView) itemView.findViewById(R.id.listDetailsIcon);
+            elementHolder = (LinearLayout)itemView.findViewById(R.id.detail_row_element);
         }
     }
 }//end BusDetailsAdapter
