@@ -45,24 +45,14 @@ public class  MainActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id== R.id.action_settings){
-            Toast.makeText(this,"Hey you just hit " + item.getTitle(), Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-        //when clicking tool bar search item do something..
-        if(id == R.id.searchBar){
-            //startActivity(new Intent(this, SomeActivity.class));
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

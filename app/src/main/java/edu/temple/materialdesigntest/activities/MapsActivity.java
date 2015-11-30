@@ -187,11 +187,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for(int i = 0; i < points.size() ; i++ ){
                 polylineOptions.add(points.get(i));
             }
+            // Connecting last point to first point
+            polylineOptions.add(points.get(0));
 
             polylineOptions.color(Color.BLUE);
             polylineOptions.width(4);
             polyline = mMap.addPolyline(polylineOptions);
-
         }
     }
 

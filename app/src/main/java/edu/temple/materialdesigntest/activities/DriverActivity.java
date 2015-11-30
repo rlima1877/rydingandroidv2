@@ -110,7 +110,7 @@ public class DriverActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflate the menu
-        getMenuInflater().inflate(R.menu.menu, menu);
+        //getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -119,10 +119,6 @@ public class DriverActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == android.R.id.home){
             NavUtils.navigateUpFromSameTask(this);
-        }
-        //when clicking tool bar search item do something..
-        if(id == R.id.searchBar){
-            //startActivity(new Intent(this, SomeActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
