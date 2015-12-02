@@ -94,8 +94,6 @@ public class BusDetails extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle("Bus Details");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initializeViews(List<BusStop> list){
@@ -116,10 +114,6 @@ public class BusDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-        }
 
         //when user click on gps icon to get real time location of the bus
         if(id == R.id.locationIcon){
@@ -157,7 +151,6 @@ public class BusDetails extends AppCompatActivity {
         super.onRestoreInstanceState(bundle);
         Log.d("DEBUGBUSDETAILS", "ONRESTORE CALLED.... ");
         busGeos = bundle.getParcelableArrayList("bus_data");
-        initializeViews(busGeos);
     }
 
     @Override
