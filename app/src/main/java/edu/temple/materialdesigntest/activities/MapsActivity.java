@@ -121,8 +121,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         }
-
-
     }
 
     @Override
@@ -220,7 +218,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentBusStopsList = new ArrayList<BusStop>();
         currentBusStopsList = readBusStopJSON.getBusStopList();
     }
-
-
-
 }

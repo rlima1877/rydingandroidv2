@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 import edu.temple.materialdesigntest.utilities.UpdateBusLocationService;
 
@@ -21,7 +20,6 @@ public class LocationUpdate extends Service {
     private String id;
     private double latitude;
     private double longitude;
-    private String direction;
     private LocationListener locationListener;
     private LocationManager locationManager;
     private String locationProvider;
@@ -42,7 +40,6 @@ public class LocationUpdate extends Service {
         }
         else{
             id = bundle.getString("BusID");
-            direction = bundle.getString("BusDirection");
             //locationProvider = LocationManager.GPS_PROVIDER;
             locationProvider = LocationManager.NETWORK_PROVIDER;
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -66,7 +63,7 @@ public class LocationUpdate extends Service {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 sendResult(latitude, longitude, null);
-                String url = "http://templecs.com/bus/setbuslocation?id=" + id + "&lat=" + latitude + "&lon=" + longitude + "&direction=" + direction;
+                String url = "http://templecs.com/bus/setbuslocation?id=" + id + "&lat=" + latitude + "&lon=" + longitude;
 
                 UpdateBusLocationService updateBusLocationService = new UpdateBusLocationService(getApplicationContext(), url);
                 Thread threat = new Thread(updateBusLocationService);
