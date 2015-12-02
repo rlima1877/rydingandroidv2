@@ -15,26 +15,28 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import edu.temple.materialdesigntest.model.Bus;
+import edu.temple.materialdesigntest.model.BusStop;
 
 public class TravelTimeService implements Runnable {
 
     Activity activity;
     String myurl;
-    String travelTime;
+    ArrayList<BusStop> busStops;
 
     public TravelTimeService(Activity activity, String myurl) {
         this.activity = activity;
         this.myurl = myurl;
     }
 
-    public String getTravelTime() {
-        return travelTime;
+    public ArrayList<BusStop> getTravelTime() {
+        return busStops;
     }
+
     @Override
     public void run() {
         if (hasInternetConnection()) {
             try {
-                travelTime = loadJSONFromNetwork(myurl);
+                busStops = loadJSONFromNetwork(myurl);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
@@ -48,11 +50,11 @@ public class TravelTimeService implements Runnable {
     }
 
     //Loading JSON from inputstream then store in arraylist
-    private String loadJSONFromNetwork(String urlString) throws
+    private ArrayList<BusStop> loadJSONFromNetwork(String urlString) throws
             XmlPullParserException, IOException {
         InputStream stream = null;
         ReadJSON readJSON = new ReadJSON();
-        String result = "";
+        ArrayList<BusStop> result = new ArrayList<>();
 
         try {
             stream = downloadUrl(urlString);

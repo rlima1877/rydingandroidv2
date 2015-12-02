@@ -27,11 +27,11 @@
         android:layout_height="wrap_content"
         android:text=" | "/>
     <TextView
-        android:id="@+id/textViewBusDirection"
+        android:id="@+id/textViewBusRoute"
         android:layout_gravity="center_vertical"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Northbound"/>
+        android:text="Owls Loop"/>
 
 </LinearLayout>

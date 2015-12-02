@@ -34,7 +34,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,15 +52,12 @@ import edu.temple.materialdesigntest.adapters.BusListAdapter;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 import edu.temple.materialdesigntest.utilities.BusService;
+import edu.temple.materialdesigntest.utilities.ReadJSON;
 
 public class DriverActivity extends AppCompatActivity {
 
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
     private Spinner BusNumberSpin;
-    private Spinner Direction;
     private EditText busid;
-    private BusService loadBus;
     public static final String url = "http://templecs.com/bus/getallbuses";
     private LinearLayout driverContent;
     private LinearLayout loadingIcon;
@@ -83,16 +85,43 @@ public class DriverActivity extends AppCompatActivity {
     private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
         @Override
         protected List<Bus> doInBackground(Activity...activities) {
-            loadBus = new BusService(activities[0], url);
-            Thread threat = new Thread(loadBus);
-            threat.start();
             try{
-                threat.join();
-            }catch(InterruptedException ie){
-                ie.printStackTrace();
+                List<Bus> busList = loadJSONFromNetwork(url);
+                return busList;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
             }
-            List<Bus> busList = loadBus.getBusList();
-            return busList;
+            return null;
+        }
+
+        //Loading JSON from inputstream then store in arraylist
+        private ArrayList<Bus> loadJSONFromNetwork(String urlString) throws XmlPullParserException, IOException {
+            InputStream stream = null;
+            ReadJSON readJSON = new ReadJSON();
+            ArrayList<Bus> entries = new ArrayList();
+            try {
+                stream = downloadUrl(urlString);
+                entries = readJSON.readBusJSON(stream);
+            } finally {
+                if (stream != null) {
+                    stream.close();
+                }
+            }
+            return entries;
+        }
+
+        //Creating inputstream from url
+        private InputStream downloadUrl(String urlString) throws IOException {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(50000 /* milliseconds */);
+            conn.setConnectTimeout(50000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.connect();
+            return conn.getInputStream();
         }
 
         @Override
@@ -131,12 +160,8 @@ public class DriverActivity extends AppCompatActivity {
         Collections.sort(list);
         busid = (EditText) findViewById(R.id.busid);
         BusNumberSpin = (Spinner) findViewById(R.id.spinner);
-        Direction = (Spinner) findViewById(R.id.spinner2);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_values,android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        Direction.setAdapter(adapter);
-        ArrayAdapter<Integer> adapter1 = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line, list);
-        BusNumberSpin.setAdapter(adapter1);
+        ArrayAdapter<Integer> adapter = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line, list);
+        BusNumberSpin.setAdapter(adapter);
     }
 
 
@@ -155,7 +180,6 @@ public class DriverActivity extends AppCompatActivity {
                 int tempID = Integer.parseInt(busID);
                 Intent intent = new Intent(this, DriverView.class);
                 intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
-                intent.putExtra("direction", Direction.getSelectedItem().toString());
                 intent.putExtra("busid",String.valueOf(tempID));
                 startActivity(intent);
             } catch (NumberFormatException e) {

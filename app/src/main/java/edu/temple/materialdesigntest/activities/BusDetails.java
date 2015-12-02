@@ -26,13 +26,14 @@ import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.model.BusStop;
 import edu.temple.materialdesigntest.utilities.BusService;
 import edu.temple.materialdesigntest.utilities.BusStopService;
+import edu.temple.materialdesigntest.utilities.TravelTimeService;
 
 public class BusDetails extends AppCompatActivity {
 
     private BusDetailsAdapter busDetailsAdapter;
     private Bus bus;
     private ArrayList<BusStop> busGeos;
-    private String url = "http://templecs.com/bus/getbusroute?busid=";
+    private String url = "http://templecs.com/bus/gettraveltime?id=";
     private LinearLayout busStopContent;
     private LinearLayout loadingIcon;
     private boolean ready;
@@ -68,7 +69,7 @@ public class BusDetails extends AppCompatActivity {
     private class GetBusInformation extends AsyncTask<Activity, Void, List<BusStop>> {
         @Override
         protected List<BusStop> doInBackground(Activity...activities) {
-            BusStopService readBusStopJSON = new BusStopService(activities[0], url);
+            TravelTimeService readBusStopJSON = new TravelTimeService(activities[0], url);
             Thread threat = new Thread(readBusStopJSON);
             threat.start();
             try{
@@ -76,7 +77,7 @@ public class BusDetails extends AppCompatActivity {
             }catch(InterruptedException ie){
                 ie.printStackTrace();
             }
-            busGeos = readBusStopJSON.getBusStopList();
+            busGeos = readBusStopJSON.getTravelTime();
             return busGeos;
         }
 

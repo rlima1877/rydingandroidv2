@@ -42,8 +42,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //flag for which shuttleService to draw.
     private String shuttleService;
     String urlCurrentLoc = "http://templecs.com/bus/getbuslocation?id=";
-    String urlCurrentBusStopsInfo = "http://templecs.com/bus/getbusroute?busid=";
-
+    String urlCurrentBusStopsInfo = "http://templecs.com/bus/getbusroute?id=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

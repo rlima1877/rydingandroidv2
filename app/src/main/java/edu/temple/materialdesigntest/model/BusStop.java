@@ -14,6 +14,15 @@ public class BusStop implements Parcelable {
     private String name;
     private double latitude;
     private double longitude;
+    private double time;
+
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time){
+        this.time = time;
+    }
 
     public double getGeoLong() {
         return longitude;
@@ -60,12 +69,13 @@ public class BusStop implements Parcelable {
         //empty
     }
 
-    public BusStop(int busNumber, int busID, String name, double lat, double lon){
+    public BusStop(int busNumber, int busID, String name, double lat, double lon, double time){
         this.busNumber = busNumber;
         this.busID = busID;
         this.name = name;
         this.latitude = lat;
         this.longitude = lon;
+        this.time = time;
     }
 
     public BusStop(Parcel in) {
@@ -74,6 +84,7 @@ public class BusStop implements Parcelable {
         this.name =  in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
+        this.time = in.readDouble();
     }
 
     @Override
@@ -88,6 +99,7 @@ public class BusStop implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(time);
     }
 
     public static final Creator<BusStop> CREATOR = new Creator<BusStop>()

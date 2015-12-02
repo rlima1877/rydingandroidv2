@@ -60,7 +60,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
         final Bus currentBus = buses.get(position);
         holder.icon.setImageResource(R.drawable.bus_icon_32);
         holder.busNumber.setText(Integer.toString(currentBus.getBusNumber()));
-        holder.busDirection.setText(currentBus.getBusRoute());
+        holder.busRoute.setText(currentBus.getBusRoute());
 
 
         //Click listener for each cell in the bus list.
@@ -79,7 +79,7 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
 
         if(position % 2 == 0){
             holder.elementHolder.setBackgroundColor(Color.GRAY);
-            holder.busDirection.setTextColor(Color.BLACK);
+            holder.busRoute.setTextColor(Color.BLACK);
             holder.busNumber.setTextColor(Color.BLACK);
         }
     }
@@ -102,14 +102,14 @@ public class BusListAdapter extends RecyclerView.Adapter<BusListAdapter.MyViewHo
     class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView busNumber;
-        TextView busDirection;
+        TextView busRoute;
         ImageView icon;
         LinearLayout elementHolder;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             busNumber = (TextView) itemView.findViewById(R.id.textViewBusNumber);
-            busDirection = (TextView) itemView.findViewById(R.id.textViewBusDirection);
+            busRoute = (TextView) itemView.findViewById(R.id.textViewBusRoute);
             icon = (ImageView) itemView.findViewById(R.id.listIcon);
             elementHolder = (LinearLayout)itemView.findViewById(R.id.row_element);
         }

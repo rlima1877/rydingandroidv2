@@ -43,7 +43,8 @@ public class LocationUpdate extends Service {
         else{
             id = bundle.getString("BusID");
             direction = bundle.getString("BusDirection");
-            locationProvider = LocationManager.GPS_PROVIDER;
+            //locationProvider = LocationManager.GPS_PROVIDER;
+            locationProvider = LocationManager.NETWORK_PROVIDER;
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             locationListener = getLocationListener();
             locationManager.requestLocationUpdates(locationProvider, 10000, 0, locationListener);
@@ -62,15 +63,11 @@ public class LocationUpdate extends Service {
     public LocationListener getLocationListener() {
         return new LocationListener() {
             public void onLocationChanged(Location location) {
-                Log.d("DRIVER", "onLocationChanged() called");
-                // Called when a new location is found by the GPS provider.
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 sendResult(latitude, longitude, null);
-                Log.d("DRIVER", "lat: " + latitude + ", long: " + longitude);
-                //Insert JSON call here
                 String url = "http://templecs.com/bus/setbuslocation?id=" + id + "&lat=" + latitude + "&lon=" + longitude + "&direction=" + direction;
-                Log.d("DRIVER", "url: " + url);
+
                 UpdateBusLocationService updateBusLocationService = new UpdateBusLocationService(getApplicationContext(), url);
                 Thread threat = new Thread(updateBusLocationService);
                 threat.start();

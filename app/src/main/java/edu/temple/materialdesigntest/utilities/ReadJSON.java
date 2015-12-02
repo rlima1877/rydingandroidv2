@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.model.BusStop;
@@ -32,8 +33,8 @@ public class ReadJSON {
                 JSONObject busObject = jsonArray.getJSONObject(i);
                 Bus bus = new Bus();
                 bus.setBusNumber(busObject.getInt("BusNumber"));
-                bus.setBusRoute(busObject.getString("Direction"));
                 bus.setBusID(busObject.getInt("BusID"));
+                bus.setBusRoute(busObject.getString("BusRoute"));
                 busList.add(bus);
             }
         } catch (JSONException je) {
@@ -60,7 +61,7 @@ public class ReadJSON {
                 BusStop busStop = new BusStop();
                 busStop.setBusNumber(busStopObject.getInt("BusNumber"));
                 busStop.setBusID(busStopObject.getInt("BusID"));
-                busStop.setName(busStopObject.getString("Name"));
+                busStop.setName(busStopObject.getString("StopName"));
                 busStop.setGeoLat(busStopObject.getDouble("Latitude"));
                 busStop.setGeoLong(busStopObject.getDouble("Longitude"));
                 busStopList.add(busStop);
@@ -71,24 +72,34 @@ public class ReadJSON {
         return busStopList;
     }
 
-    public String readTravelTimeJSON(InputStream in) throws IOException {
+    public ArrayList<BusStop> readTravelTimeJSON(InputStream in) throws IOException {
         InputStreamReader inputStreamReader = new InputStreamReader(in);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         StringBuilder stringBuilder = new StringBuilder();
         String tempStr = "";
-        String result = "";
+        ArrayList<BusStop> busStops = new ArrayList<BusStop>();
         while((tempStr = bufferedReader.readLine()) != null){
             stringBuilder.append(tempStr);
         }
 
         try {
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-            result = jsonObject.getString("time");
-
+            JSONArray jsonArray = jsonObject.getJSONArray("allstops");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject busStopObject = jsonArray.getJSONObject(i);
+                BusStop busStop = new BusStop();
+                busStop.setTime(busStopObject.getDouble("Time"));
+                busStop.setName(busStopObject.getString("StopName"));
+                busStop.setGeoLat(busStopObject.getDouble("Latitude"));
+                busStop.setGeoLong(busStopObject.getDouble("Longitude"));
+                busStop.setBusNumber(busStopObject.getInt("BusNumber"));
+                busStop.setBusID(busStopObject.getInt("BusID"));
+                busStops.add(busStop);
+            }
         } catch (JSONException je) {
             je.printStackTrace();
         }
-        return result;
+        return busStops;
     }
 
     public Bus readBusLocationJSON(InputStream in) throws IOException {

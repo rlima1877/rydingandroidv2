@@ -44,13 +44,10 @@ public class DriverView extends AppCompatActivity {
         id = getIntent().getExtras().getString("busid");
 
         routeText = (TextView) findViewById(R.id.route);
-        directionText = (TextView) findViewById(R.id.direction);
         busIDText = (TextView) findViewById(R.id.busid);
         latitudeText = (TextView) findViewById(R.id.latitude);
         longitudeText = (TextView) findViewById(R.id.longitude);
-
         routeText.setText("Current Bus Number: " + busnumber);
-        directionText.setText("Direction: " + direction);
         busIDText.setText("Bus ID: " + id);
 
         startService(id, direction);
