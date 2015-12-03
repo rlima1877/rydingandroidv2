@@ -4,13 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +22,6 @@ public class DriverView extends AppCompatActivity {
     private double latitude;
     private double longitude;
 
-    private TextView routeText;
-    private TextView directionText;
     private TextView busIDText;
     private TextView latitudeText;
     private TextView longitudeText;
@@ -39,18 +33,14 @@ public class DriverView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driverview);
 
-        busnumber = getIntent().getExtras().getString("busnumber");
-        direction = getIntent().getExtras().getString("direction");
         id = getIntent().getExtras().getString("busid");
 
-        routeText = (TextView) findViewById(R.id.route);
         busIDText = (TextView) findViewById(R.id.busid);
         latitudeText = (TextView) findViewById(R.id.latitude);
         longitudeText = (TextView) findViewById(R.id.longitude);
-        routeText.setText("Current Bus Number: " + busnumber);
         busIDText.setText("Bus ID: " + id);
 
-        startService(id, direction);
+        startService(id);
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -72,10 +62,9 @@ public class DriverView extends AppCompatActivity {
         stopService();
     }
 
-    public void startService(String busID, String busDirection) {
+    public void startService(String busID) {
         Intent intent = new Intent(getBaseContext(), LocationUpdate.class);
         intent.putExtra("BusID", busID);
-        intent.putExtra("BusDirection", busDirection);
         startService(intent);
     }
 
@@ -97,8 +86,7 @@ public class DriverView extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
-                new IntentFilter("LocationService")
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter("LocationService")
         );
     }
 

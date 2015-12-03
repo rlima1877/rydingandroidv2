@@ -56,84 +56,14 @@ import edu.temple.materialdesigntest.utilities.ReadJSON;
 
 public class DriverActivity extends AppCompatActivity {
 
-    private Spinner BusNumberSpin;
     private EditText busid;
-    public static final String url = "http://templecs.com/bus/getallbuses";
-    private LinearLayout driverContent;
-    private LinearLayout loadingIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle("Ryding Driver");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        busid = (EditText) findViewById(R.id.busid);
         setupToolbar();
-
-        driverContent = (LinearLayout)findViewById(R.id.driverContent);
-        driverContent.setVisibility(View.GONE);
-        loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
-        loadingIcon.setVisibility(View.VISIBLE);
-
-        GetBusInformation task = new GetBusInformation();
-        task.execute(this);
-    }
-
-    private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
-        @Override
-        protected List<Bus> doInBackground(Activity...activities) {
-            try{
-                List<Bus> busList = loadJSONFromNetwork(url);
-                return busList;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //Loading JSON from inputstream then store in arraylist
-        private ArrayList<Bus> loadJSONFromNetwork(String urlString) throws XmlPullParserException, IOException {
-            InputStream stream = null;
-            ReadJSON readJSON = new ReadJSON();
-            ArrayList<Bus> entries = new ArrayList();
-            try {
-                stream = downloadUrl(urlString);
-                entries = readJSON.readBusJSON(stream);
-            } finally {
-                if (stream != null) {
-                    stream.close();
-                }
-            }
-            return entries;
-        }
-
-        //Creating inputstream from url
-        private InputStream downloadUrl(String urlString) throws IOException {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(50000 /* milliseconds */);
-            conn.setConnectTimeout(50000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            conn.connect();
-            return conn.getInputStream();
-        }
-
-        @Override
-        protected void onPostExecute(List<Bus> busList) {
-            List<Integer> busNumList = new ArrayList<>();
-            for(int i=0; i<busList.size(); i++){
-                busNumList.add(busList.get(i).getBusNumber());
-            }
-            initializeViews(busNumList);
-            loadingIcon.setVisibility(View.GONE);
-            driverContent.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -146,31 +76,13 @@ public class DriverActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == android.R.id.home){
-            NavUtils.navigateUpFromSameTask(this);
-        }
         return super.onOptionsItemSelected(item);
     }
-
-    private void initializeViews(List<Integer> list){
-        Set<Integer> hs = new HashSet<>();
-        hs.addAll(list);
-        list.clear();
-        list.addAll(hs);
-        Collections.sort(list);
-        busid = (EditText) findViewById(R.id.busid);
-        BusNumberSpin = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<Integer> adapter = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line, list);
-        BusNumberSpin.setAdapter(adapter);
-    }
-
 
     private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle("Ryding Driver");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void OpenView(View view){
@@ -179,7 +91,6 @@ public class DriverActivity extends AppCompatActivity {
             try {
                 int tempID = Integer.parseInt(busID);
                 Intent intent = new Intent(this, DriverView.class);
-                intent.putExtra("busnumber", BusNumberSpin.getSelectedItem().toString());
                 intent.putExtra("busid",String.valueOf(tempID));
                 startActivity(intent);
             } catch (NumberFormatException e) {

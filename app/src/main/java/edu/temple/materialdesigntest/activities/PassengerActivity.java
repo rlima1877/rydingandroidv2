@@ -30,6 +30,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,17 +39,16 @@ import java.util.List;
 import edu.temple.materialdesigntest.model.Bus;
 import edu.temple.materialdesigntest.R;
 import edu.temple.materialdesigntest.adapters.BusListAdapter;
+import edu.temple.materialdesigntest.model.BusStop;
 import edu.temple.materialdesigntest.utilities.BusService;
 import edu.temple.materialdesigntest.network.VolleySingleton;
 import edu.temple.materialdesigntest.utilities.ReadJSON;
 
 public class PassengerActivity extends AppCompatActivity {
     private BusListAdapter busListAdapter;
-    private BusService loadBus;
-    private LinearLayout passengerContent;
-    private LinearLayout loadingIcon;
 
     public static final String url = "http://templecs.com/bus/getallbuses";
+    public ArrayList<Bus> busList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +56,16 @@ public class PassengerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_passenger);
         setupToolbar();
 
-        passengerContent = (LinearLayout)findViewById(R.id.passsengerContent);
-        passengerContent.setVisibility(View.GONE);
-        loadingIcon = (LinearLayout)findViewById(R.id.loadingIcon);
-        loadingIcon.setVisibility(View.VISIBLE);
+        Bundle bundle = getIntent().getBundleExtra("BusList");
+        if(bundle != null){
+            busList = bundle.getParcelableArrayList("BusList");
+            initializeViews(busList);
+        }
 
-        GetBusInformation task = new GetBusInformation();
-        task.execute(this);
+        if(savedInstanceState != null) {
+            busList = savedInstanceState.getParcelableArrayList("bus_data");
+            initializeViews(busList);
+        }
     }
 
     @Override
@@ -74,8 +77,6 @@ public class PassengerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle("Ryding Passenger");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initializeViews(List<Bus> list){
@@ -83,6 +84,18 @@ public class PassengerActivity extends AppCompatActivity {
         busListAdapter = new BusListAdapter(this, list);
         recyclerView.setAdapter(busListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        bundle.putParcelableArrayList("bus_data", busList);
+        super.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+        busList = bundle.getParcelableArrayList("bus_data");
     }
 
     @Override
@@ -94,62 +107,7 @@ public class PassengerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-        }
         return super.onOptionsItemSelected(item);
-    }
-
-    private class GetBusInformation extends AsyncTask<Activity, Void, List<Bus>> {
-        @Override
-        protected List<Bus> doInBackground(Activity...activities) {
-            try{
-                List<Bus> busList = loadJSONFromNetwork(url);
-                return busList;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //Loading JSON from inputstream then store in arraylist
-        private ArrayList<Bus> loadJSONFromNetwork(String urlString) throws XmlPullParserException, IOException {
-            InputStream stream = null;
-            ReadJSON readJSON = new ReadJSON();
-            ArrayList<Bus> entries = new ArrayList();
-            try {
-                stream = downloadUrl(urlString);
-                entries = readJSON.readBusJSON(stream);
-            } finally {
-                if (stream != null) {
-                    stream.close();
-                }
-            }
-            return entries;
-        }
-
-        //Creating inputstream from url
-        private InputStream downloadUrl(String urlString) throws IOException {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(50000 /* milliseconds */);
-            conn.setConnectTimeout(50000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            conn.connect();
-            return conn.getInputStream();
-        }
-
-        @Override
-        protected void onPostExecute(List<Bus> busList) {
-            initializeViews(busList);
-            loadingIcon.setVisibility(View.GONE);
-            passengerContent.setVisibility(View.VISIBLE);
-        }
     }
 }

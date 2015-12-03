@@ -6,21 +6,13 @@
     android:padding="20px">
 
     <TextView
-        android:layout_marginTop="100px"
+        android:layout_marginTop="150px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="20sp"
-        android:text="Current Bus Number: "
+        android:textSize="25sp"
+        android:text="Bus ID: "
         android:textStyle="bold"
-        android:id="@+id/route" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:text="Bus id: "
         android:id="@+id/busid" />
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +27,8 @@
         android:layout_gravity="center"
         android:textSize="20sp"
         android:text="Longitude: Updating"
-        android:id="@+id/longitude" />
+        android:id="@+id/longitude"
+        android:layout_marginBottom="50px"/>
     <Button
         android:layout_width="400px"
         android:layout_height="150px"

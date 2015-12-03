@@ -48,9 +48,7 @@ public class Bus implements Parcelable {
         this.busRoute = in.readString();
         this.geoLat = in.readDouble();
         this.geoLong = in.readDouble();
-
     }
-
 
     public int getBusID() {
         return busID;
