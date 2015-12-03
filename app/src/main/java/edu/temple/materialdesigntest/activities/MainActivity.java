@@ -35,7 +35,7 @@ public class  MainActivity extends AppCompatActivity {
         driverButton = (Button) findViewById(R.id.buttonDriver);
         driverButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), DriverActivity.class));
+                startActivity(new Intent(v.getContext(), LoginActivity.class));
             }
         });
 
