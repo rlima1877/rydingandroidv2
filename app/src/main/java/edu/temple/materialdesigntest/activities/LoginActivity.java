@@ -17,14 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,13 +35,12 @@ import edu.temple.materialdesigntest.R;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private static final String DUMMY_CREDENTIALS = "admin:admin";
+    private static final String DUMMY_CREDENTIALS = "1234";
 
     private UserLoginTask userLoginTask = null;
     private View loginFormView;
     private View progressView;
     private AutoCompleteTextView driverIDTextView;
-    private EditText passwordTextView;
     private TextView signUpTextView;
 
     @Override
@@ -55,17 +51,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         driverIDTextView = (AutoCompleteTextView) findViewById(R.id.email);
         loadAutoComplete();
 
-        passwordTextView = (EditText) findViewById(R.id.password);
-        passwordTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_NULL) {
-                    initLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Button loginButton = (Button) findViewById(R.id.email_sign_in_button);
         loginButton.setOnClickListener(new OnClickListener() {
@@ -107,19 +92,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         driverIDTextView.setError(null);
-        passwordTextView.setError(null);
 
         String driverID = driverIDTextView.getText().toString();
-        String password = passwordTextView.getText().toString();
 
         boolean cancelLogin = false;
         View focusView = null;
 
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordTextView.setError(getString(R.string.invalid_password));
-            focusView = passwordTextView;
-            cancelLogin = true;
-        }
 
         if (TextUtils.isEmpty(driverID)) {
             driverIDTextView.setError(getString(R.string.field_required));
@@ -137,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // show progress spinner, and start background task to login
             showProgress(true);
-            userLoginTask = new UserLoginTask(driverID, password);
+            userLoginTask = new UserLoginTask(driverID);
             userLoginTask.execute((Void) null);
         }
     }
@@ -249,11 +227,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String driverID;
-        private final String passwordStr;
 
-        UserLoginTask(String driverID, String password) {
+        UserLoginTask(String driverID) {
             this.driverID = driverID;
-            passwordStr = password;
         }
 
         @Override
@@ -268,8 +244,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             //using a local dummy credentials store to authenticate
-            String[] pieces = DUMMY_CREDENTIALS.split(":");
-            if (pieces[0].equals(driverID) && pieces[1].equals(passwordStr)) {
+            String dummyID = DUMMY_CREDENTIALS;
+            if (dummyID.equals(driverID)) {
                 return true;
             } else {
                 return false;
@@ -286,8 +262,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //  login success and move to driver activity.
             } else {
                 // login failure
-                passwordTextView.setError(getString(R.string.incorrect_password));
-                passwordTextView.requestFocus();
+                driverIDTextView.setError(getString(R.string.invalid_driver_pin));
+                driverIDTextView.requestFocus();
             }
         }
 
