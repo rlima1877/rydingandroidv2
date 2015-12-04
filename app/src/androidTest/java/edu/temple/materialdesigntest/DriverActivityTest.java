@@ -1,6 +1,7 @@
 package edu.temple.materialdesigntest;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.content.Intent;
+import android.test.ActivityUnitTestCase;
 import android.widget.EditText;
 
 import edu.temple.materialdesigntest.activities.DriverActivity;
@@ -8,7 +9,7 @@ import edu.temple.materialdesigntest.activities.DriverActivity;
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentalss</a>
  */
-public class DriverActivityTest extends ActivityInstrumentationTestCase2<DriverActivity> {
+public class DriverActivityTest extends ActivityUnitTestCase<DriverActivity> {
     private DriverActivity activity;
     private EditText busIDText;
 
@@ -19,6 +20,8 @@ public class DriverActivityTest extends ActivityInstrumentationTestCase2<DriverA
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        Intent launchIntent = new Intent(getInstrumentation().getTargetContext(), DriverActivityTest.class);
+        startActivity(launchIntent, null, null);
         activity = getActivity();
         busIDText = (EditText) activity.findViewById(R.id.busid);
     }
