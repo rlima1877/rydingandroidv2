@@ -86,20 +86,19 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     public void OpenView(View view){
-        String busID = busid.getText().toString();
-        if(busID.length() > 0){
-            try {
-                int tempID = Integer.parseInt(busID);
-                Intent intent = new Intent(this, DriverView.class);
-                intent.putExtra("busid",String.valueOf(tempID));
-                startActivity(intent);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else{
+        try {
+            int tempID = getBusID();
+            Intent intent = new Intent(this, DriverView.class);
+            intent.putExtra("busid",String.valueOf(tempID));
+            startActivity(intent);
+        } catch (NumberFormatException e) {
             Toast.makeText(this, "Please enter Bus ID", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public int getBusID() throws NumberFormatException {
+        String busID = busid.getText().toString();
+        return Integer.parseInt(busID);
     }
 
     @Override
